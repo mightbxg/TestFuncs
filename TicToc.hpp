@@ -31,6 +31,15 @@ public:
     {
         return global_timers[label].totalTime();
     }
+    inline static double showTime(const std::string& label, bool stop = false)
+    {
+        auto& timer = global_timers[label];
+        if (stop)
+            timer.stop();
+        auto t = timer.totalTime();
+        std::cout << "timer [" << label << "]: " << t << " s" << std::endl;
+        return t;
+    }
     inline static void reset(const std::string& label)
     {
         global_timers[label].reset();
