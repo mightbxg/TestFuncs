@@ -14,7 +14,7 @@ inline void showM128i(const __m128i val, bool show_bin = false)
 {
     constexpr int sz = sizeof(T);
     constexpr int N = 16 / sz;
-    T* v = static_cast<T*>(std::aligned_alloc(16, 16));
+    alignas (16) T v[N];
     _mm_store_si128(reinterpret_cast<__m128i*>(v), val);
     for (int i = 0; i < N; ++i) {
         if (show_bin)
@@ -23,7 +23,6 @@ inline void showM128i(const __m128i val, bool show_bin = false)
             printf("%3lld ", (long long)(v[i]));
     }
     std::cout << std::endl;
-    std::free(v);
 }
 
 }
