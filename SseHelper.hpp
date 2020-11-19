@@ -1,4 +1,4 @@
-#ifndef __BXG_SSEHELPER_H
+#if not defined (__BXG_SSEHELPER_H) and defined(__SSE4_2__)
 #define __BXG_SSEHELPER_H
 
 #pragma message("BXG warning: SSE-Helper is a feature for debug or test only")
