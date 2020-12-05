@@ -77,7 +77,7 @@ private:
             is_on = false;
             return time_total;
         }
-        inline void reset(bool seton = true)
+        inline void reset(bool seton = false)
         {
             time_start = TicToc::now();
             time_total = 0.;
