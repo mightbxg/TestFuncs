@@ -56,7 +56,7 @@ public:
 private:
     class Timer {
     public:
-        inline Timer(bool seton = true)
+        inline Timer(bool seton = false)
         {
             reset(seton);
         }
