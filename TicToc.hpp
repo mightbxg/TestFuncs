@@ -31,15 +31,33 @@ public:
     {
         return global_timers[label].totalTime();
     }
-    inline static double showTime(const std::string& label, bool avg = false, bool stop = false)
+    inline static void showTime(const std::string& label, bool stop = false)
     {
         auto& timer = global_timers[label];
         if (stop)
             timer.stop();
-        auto t = (avg ? timer.avgTime() : timer.totalTime()) * 1e3;
-        std::cout << "\33[33mtimer [" << label << "]: " << t << " ms"
-                  << "\33[0m" << std::endl;
-        return t;
+
+        auto time2Str = [](double sec) -> std::string {
+            std::string unit = " s";
+            if (sec >= 10)
+                unit = " s";
+            else if (sec >= 1e-4) {
+                sec *= 1e3;
+                unit = " ms";
+            } else if (sec >= 1e-7) {
+                sec *= 1e6;
+                unit = " us";
+            } else {
+                sec *= 1e9;
+                unit = " ns";
+            }
+            return std::to_string(sec) + unit;
+        };
+
+        printf("\33[33mtimer[%s]: cnt[%d] total[%s] avg[%s] last[%s]\33[0m\n",
+            label.c_str(), timer.count(), time2Str(timer.totalTime()).c_str(),
+            time2Str(timer.avgTime()).c_str(), time2Str(timer.lastTime()).c_str());
+        std::cout.flush();
     }
     inline static void reset(const std::string& label)
     {
