@@ -53,6 +53,10 @@ public:
     {
         return global_timers[label].avgTime();
     }
+    inline static double lastTime(const std::string& label)
+    {
+        return global_timers[label].lastTime();
+    }
 
 private:
     class Timer {
@@ -73,7 +77,8 @@ private:
         {
             if (!is_on)
                 return time_total;
-            time_total += timeFromStart();
+            time_last = timeFromStart();
+            time_total += time_last;
             time_start = TicToc::now();
             is_on = false;
             return time_total;
@@ -82,6 +87,7 @@ private:
         {
             time_start = TicToc::now();
             time_total = 0.;
+            time_last = 0.;
             count_ = 0;
             is_on = seton;
         }
@@ -102,10 +108,15 @@ private:
                 return 0.;
             return totalTime() / count_;
         }
+        inline double lastTime() const
+        {
+            return time_last;
+        }
 
     private:
         TimePoint time_start;
         double time_total;
+        double time_last; // time between last start and last stop
         int count_; //!< started times
         std::atomic_bool is_on;
     };
