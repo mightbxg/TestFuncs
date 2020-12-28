@@ -3,9 +3,9 @@
 
 #pragma message("BXG warning: TicToc is a feature for debug or test only")
 
-#include <atomic>
 #include <chrono>
 #include <iostream>
+#include <string>
 #include <unordered_map>
 
 namespace [[deprecated("Features for debug or test only")]] bxg {
@@ -19,67 +19,44 @@ public:
     inline static TimePoint now() { return Clock::now(); }
     inline static void start(const std::string& label)
     {
-        global_timers[label].start();
+        timer(label).start();
     }
     /// @brief stop the timer and retrieve total time (seconds)
     inline static double stop(const std::string& label)
     {
-        return global_timers[label].stop();
+        return timer(label).stop();
     }
     /// @brief retrieve total time (seconds)
     inline static double totalTime(const std::string& label)
     {
-        return global_timers[label].totalTime();
+        return timer(label).totalTime();
     }
     inline static void showTime(const std::string& label, bool stop = false)
     {
-        auto& timer = global_timers[label];
-        if (stop)
-            timer.stop();
-
-        auto time2Str = [](double sec) -> std::string {
-            std::string unit = " s";
-            if (sec >= 10)
-                unit = " s";
-            else if (sec >= 1e-4) {
-                sec *= 1e3;
-                unit = " ms";
-            } else if (sec >= 1e-7) {
-                sec *= 1e6;
-                unit = " us";
-            } else {
-                sec *= 1e9;
-                unit = " ns";
-            }
-            return std::to_string(sec) + unit;
-        };
-
-        printf("\33[33mtimer[%s]: cnt[%d] total[%s] avg[%s] last[%s]\33[0m\n",
-            label.c_str(), timer.count(), time2Str(timer.totalTime()).c_str(),
-            time2Str(timer.avgTime()).c_str(), time2Str(timer.lastTime()).c_str());
-        std::cout.flush();
+        timer(label).showTime(stop);
     }
     inline static void reset(const std::string& label)
     {
-        global_timers[label].reset();
+        timer(label).reset();
     }
     inline static int count(const std::string& label)
     {
-        return global_timers[label].count();
+        return timer(label).count();
     }
     inline static double avgTime(const std::string& label)
     {
-        return global_timers[label].avgTime();
+        return timer(label).avgTime();
     }
     inline static double lastTime(const std::string& label)
     {
-        return global_timers[label].lastTime();
+        return timer(label).lastTime();
     }
 
 private:
     class Timer {
     public:
-        inline Timer(bool seton = false)
+        inline Timer(const std::string _label, bool seton = false)
+            : label(_label)
         {
             reset(seton);
         }
@@ -131,16 +108,55 @@ private:
             return time_last;
         }
 
+        inline void showTime(bool stop = false)
+        {
+            if (stop)
+                this->stop();
+
+            auto time2Str = [](double sec) -> std::string {
+                std::string unit = " s";
+                if (sec >= 10)
+                    unit = " s";
+                else if (sec >= 1e-4) {
+                    sec *= 1e3;
+                    unit = " ms";
+                } else if (sec >= 1e-7) {
+                    sec *= 1e6;
+                    unit = " us";
+                } else {
+                    sec *= 1e9;
+                    unit = " ns";
+                }
+                return std::to_string(sec) + unit;
+            };
+
+            printf("\33[33mtimer[%s]: cnt[%d] total[%s] avg[%s] last[%s]\33[0m\n",
+                label.c_str(), this->count(), time2Str(this->totalTime()).c_str(),
+                time2Str(this->avgTime()).c_str(), time2Str(this->lastTime()).c_str());
+            std::cout.flush();
+        }
+
     private:
+        std::string label;
         TimePoint time_start;
         double time_total;
         double time_last; // time between last start and last stop
         int count_; //!< started times
-        std::atomic_bool is_on;
+        volatile bool is_on;
     };
 
 private:
     inline static std::unordered_map<std::string, Timer> global_timers;
+
+private:
+    inline static Timer& timer(const std::string& label)
+    {
+        auto res = global_timers.find(label);
+        if (res != global_timers.end())
+            return res->second;
+        auto r = global_timers.emplace(label, Timer(label));
+        return r.first->second;
+    }
 };
 
 namespace details {
