@@ -60,6 +60,10 @@ private:
         {
             reset(seton);
         }
+        inline ~Timer()
+        {
+            showTime();
+        }
         inline void start()
         {
             if (is_on)
@@ -154,7 +158,7 @@ private:
         auto res = global_timers.find(label);
         if (res != global_timers.end())
             return res->second;
-        auto r = global_timers.emplace(label, Timer(label));
+        auto r = global_timers.emplace(label, label);
         return r.first->second;
     }
 };
