@@ -62,7 +62,7 @@ private:
         }
         inline ~Timer()
         {
-            showTime();
+            showTime(true);
         }
         inline void start()
         {
