@@ -1,3 +1,13 @@
+/***************************************************************
+ * Copyright 2020 (c) Xinguang Bian <victorbian@outlook.com>
+ *
+ * TicToc is part of TestFunc project.
+ * By providing global labeled timers, TicToc can easily be used
+ * to benchmark the time cost of algorithms.
+ *
+ * Note: C++17 feature is required.
+ **************************************************************/
+
 #ifndef __DBG_TICTOC_H
 #define __DBG_TICTOC_H
 

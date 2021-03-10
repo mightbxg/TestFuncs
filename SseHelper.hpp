@@ -1,3 +1,12 @@
+/***************************************************************
+ * Copyright 2020 (c) Xinguang Bian <victorbian@outlook.com>
+ *
+ * SseHelper is part of TestFunc project.
+ * It provides helper functions to debug SSE codes.
+ *
+ * Note: C++17 feature is needed only for SseHelperDummy.
+ **************************************************************/
+
 #if not defined(__DBG_SSEHELPER_H) and defined(__x86_64__)
 #define __DBG_SSEHELPER_H
 
