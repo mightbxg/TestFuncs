@@ -1,14 +1,14 @@
-#ifndef __BXG_TICTOC_H
-#define __BXG_TICTOC_H
+#ifndef __DBG_TICTOC_H
+#define __DBG_TICTOC_H
 
-#pragma message("BXG warning: TicToc is a feature for debug or test only")
+#pragma message("dbg warning: TicToc is a feature for debug or test only")
 
 #include <chrono>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 
-namespace [[deprecated("Features for debug or test only")]] bxg {
+namespace [[deprecated("Features for debug or test only")]] dbg {
 
 class TicToc {
 public:
@@ -175,6 +175,6 @@ namespace details {
         inline static Msg msg;
     };
 }
-} // namespace bxg
+} // namespace dbg
 
-#endif
+#endif // __DBG_TICTOC_H
