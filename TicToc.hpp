@@ -168,13 +168,12 @@ namespace details {
         struct Msg {
             Msg()
             {
-                std::cout << "\33[33mWarning: Debug feature \"TicToc\" is included.\33[0m\n"
-                          << std::endl;
+                std::cout << "\33[33mWarning: Debug feature \"TicToc\" is included.\33[0m" << std::endl;
             };
         };
         inline static Msg msg;
     };
-}
+} // namespace details
 } // namespace dbg
 
 #endif // __DBG_TICTOC_H
