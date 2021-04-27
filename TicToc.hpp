@@ -13,6 +13,7 @@
 
 #pragma message("dbg warning: TicToc is a feature for debug or test only")
 
+#include "WarningMessage.hpp"
 #include <chrono>
 #include <iostream>
 #include <string>
@@ -173,17 +174,7 @@ private:
     }
 };
 
-namespace details {
-    class TicTocDummy final {
-        struct Msg {
-            Msg()
-            {
-                std::cout << "\33[33mWarning: Debug feature \"TicToc\" is included.\33[0m" << std::endl;
-            };
-        };
-        inline static Msg msg;
-    };
-} // namespace details
+TESTFUNCS_CREATE_WANNING_MSG(TicToc)
 } // namespace dbg
 
 #endif // __DBG_TICTOC_H

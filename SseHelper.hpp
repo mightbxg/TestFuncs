@@ -3,8 +3,6 @@
  *
  * SseHelper is part of TestFunc project.
  * It provides helper functions to debug SSE codes.
- *
- * Note: C++17 feature is needed only for SseHelperDummy.
  **************************************************************/
 
 #if not defined(__DBG_SSEHELPER_H) and defined(__x86_64__)
@@ -12,6 +10,7 @@
 
 #pragma message("DBG warning: SSE-Helper is a feature for debug or test only")
 
+#include "WarningMessage.hpp"
 #include <bitset>
 #include <immintrin.h>
 #include <iostream>
@@ -46,17 +45,7 @@ inline void showM128(const __m128 val, const char* format = "%4.2f ")
     std::cout << std::endl;
 }
 
-namespace details {
-    class SseHelperDummy final {
-        struct Msg {
-            Msg()
-            {
-                std::cout << "\33[33mWarning: Debug feature \"SseHelper\" is included.\33[0m" << std::endl;
-            };
-        };
-        inline static Msg msg;
-    };
-} // namespace details
+TESTFUNCS_CREATE_WANNING_MSG(SseHelper)
 } // namespace dbg
 
 #endif // __DBG_SSEHELPER_H
