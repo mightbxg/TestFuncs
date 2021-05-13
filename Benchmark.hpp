@@ -10,7 +10,7 @@
 
 #pragma message("dbg warning: Benchmark is a feature for debug or test only")
 
-#include "WarningMessage.hpp"
+#include "internal/WarningMessage.hpp"
 #include <algorithm>
 #include <chrono>
 #include <numeric>

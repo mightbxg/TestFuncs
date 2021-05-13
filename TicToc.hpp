@@ -13,7 +13,7 @@
 
 #pragma message("dbg warning: TicToc is a feature for debug or test only")
 
-#include "WarningMessage.hpp"
+#include "internal/WarningMessage.hpp"
 #include <chrono>
 #include <iostream>
 #include <string>

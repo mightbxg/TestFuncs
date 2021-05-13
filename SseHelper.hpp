@@ -10,7 +10,7 @@
 
 #pragma message("DBG warning: SSE-Helper is a feature for debug or test only")
 
-#include "WarningMessage.hpp"
+#include "internal/WarningMessage.hpp"
 #include <bitset>
 #include <immintrin.h>
 #include <iostream>
