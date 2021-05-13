@@ -45,7 +45,7 @@ public:
     };
 
 public:
-    using Clock = std::chrono::system_clock;
+    using Clock = std::chrono::high_resolution_clock;
     using TimePoint = std::chrono::time_point<Clock>;
     TicToc() = delete;
 
