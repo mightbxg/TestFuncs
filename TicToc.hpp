@@ -23,6 +23,28 @@ namespace [[deprecated("Features for debug or test only")]] dbg {
 
 class TicToc {
 public:
+    class ScopedTimer {
+    public:
+        ScopedTimer(const std::string& label, bool showEachRun = false)
+            : label_(label)
+            , showEachRun_(showEachRun)
+        {
+            TicToc::start(label);
+        }
+        ~ScopedTimer()
+        {
+            if (showEachRun_)
+                TicToc::showTime(label_, true);
+            else
+                TicToc::stop(label_);
+        }
+
+    private:
+        const std::string label_;
+        const bool showEachRun_ { false };
+    };
+
+public:
     using Clock = std::chrono::system_clock;
     using TimePoint = std::chrono::time_point<Clock>;
     TicToc() = delete;
