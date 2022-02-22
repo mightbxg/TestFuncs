@@ -95,7 +95,7 @@ private:
         }
         inline ~Timer()
         {
-            showTime(true);
+            showTime(true, true);
         }
         inline void start()
         {
@@ -145,7 +145,7 @@ private:
             return time_last;
         }
 
-        inline void showTime(bool stop = false)
+        inline void showTime(bool stop = false, bool is_final = false)
         {
             if (stop)
                 this->stop();
@@ -167,9 +167,11 @@ private:
                 return std::to_string(sec) + unit;
             };
 
-            printf("\33[33mtimer[%s]: cnt[%d] total[%s] avg[%s] last[%s]\33[0m\n",
-                label.c_str(), this->count(), time2Str(this->totalTime()).c_str(),
-                time2Str(this->avgTime()).c_str(), time2Str(this->lastTime()).c_str());
+            int color = is_final ? 35 : 33;
+            printf("\33[%dmtimer[%s]: cnt[%d] total[%s] avg[%s] last[%s] %s\33[0m\n",
+                color, label.c_str(), this->count(), time2Str(this->totalTime()).c_str(),
+                time2Str(this->avgTime()).c_str(), time2Str(this->lastTime()).c_str(),
+                is_final ? "(final)" : "");
             std::cout.flush();
         }
 
