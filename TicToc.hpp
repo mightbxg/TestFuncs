@@ -25,7 +25,7 @@ class TicToc {
 public:
     class ScopedTimer {
     public:
-        ScopedTimer(const std::string& label, bool showEachRun = false)
+        explicit ScopedTimer(const std::string& label, bool showEachRun = false)
             : label_(label)
             , showEachRun_(showEachRun)
         {
@@ -88,8 +88,8 @@ public:
 private:
     class Timer {
     public:
-        inline Timer(const std::string _label, bool seton = false)
-            : label(_label)
+        explicit inline Timer(std::string _label, bool seton = false)
+            : label(std::move(_label))
         {
             reset(seton);
         }
@@ -123,24 +123,24 @@ private:
             count_ = 0;
             is_on = seton;
         }
-        inline double totalTime() const
+        [[nodiscard]] inline double totalTime() const
         {
             if (!is_on)
                 return time_total;
             return time_total + timeFromStart();
         }
-        inline double timeFromStart() const
+        [[nodiscard]] inline double timeFromStart() const
         {
-            return std::chrono::duration_cast<std::chrono::nanoseconds>(TicToc::now() - time_start).count() * 1e-9;
+            return std::chrono::duration<double>(TicToc::now() - time_start).count();
         }
-        inline int count() const { return count_; }
-        inline double avgTime() const
+        [[nodiscard]] inline int count() const { return count_; }
+        [[nodiscard]] inline double avgTime() const
         {
             if (count_ < 1)
                 return 0.;
             return totalTime() / count_;
         }
-        inline double lastTime() const
+        [[nodiscard]] inline double lastTime() const
         {
             return time_last;
         }
@@ -176,10 +176,10 @@ private:
     private:
         std::string label;
         TimePoint time_start;
-        double time_total;
-        double time_last; // time between last start and last stop
-        int count_; //!< started times
-        volatile bool is_on;
+        double time_total { 0 };
+        double time_last { 0 }; // time between last start and last stop
+        int count_ { 0 }; //!< started times
+        volatile bool is_on { false };
     };
 
 private:
