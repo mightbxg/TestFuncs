@@ -29,10 +29,16 @@ public:
         ///@param label The label of timer.
         ///@param echo_in_N 0: Do not show timer when running;\n
         ///                 Other positive N: Show the timer after running N times.
-        explicit ScopedTimer(const std::string& label, unsigned echo_in_N)
+        ///@param skip_head_N Skip the initial N running times.
+        explicit ScopedTimer(const std::string& label, unsigned echo_in_N = 0, unsigned skip_head_N = 0)
             : label_(label)
             , echo_in_N_(echo_in_N)
         {
+            if (skip_head_N) {
+                auto& cnt = skip_cnt[label_];
+                if (++cnt <= skip_head_N)
+                    return;
+            }
             TicToc::start(label);
         }
         ~ScopedTimer()
@@ -54,6 +60,7 @@ public:
         const std::string label_;
         const unsigned echo_in_N_ { 0 };
 
+        inline static std::unordered_map<std::string, unsigned> skip_cnt;
         inline static std::unordered_map<std::string, unsigned> run_cnt;
     }; // class ScopedTimer
 
