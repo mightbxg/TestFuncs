@@ -25,24 +25,37 @@ class TicToc {
 public:
     class ScopedTimer {
     public:
-        explicit ScopedTimer(const std::string& label, bool showEachRun = false)
+        ///@brief The ScopedTimer start a timer when constructed and stop the timer when destructed.
+        ///@param label The label of timer.
+        ///@param echo_in_N 0: Do not show timer when running;\n
+        ///                 Other positive N: Show the timer after running N times.
+        explicit ScopedTimer(const std::string& label, unsigned echo_in_N)
             : label_(label)
-            , showEachRun_(showEachRun)
+            , echo_in_N_(echo_in_N)
         {
             TicToc::start(label);
         }
         ~ScopedTimer()
         {
-            if (showEachRun_)
-                TicToc::showTime(label_, true);
-            else
+            if (!echo_in_N_) {
                 TicToc::stop(label_);
+                return;
+            }
+            auto& cnt = run_cnt[label_];
+            if (++cnt >= echo_in_N_) {
+                TicToc::showTime(label_, true);
+                cnt = 0;
+            } else {
+                TicToc::stop(label_);
+            }
         }
 
     private:
         const std::string label_;
-        const bool showEachRun_ { false };
-    };
+        const unsigned echo_in_N_ { 0 };
+
+        inline static std::unordered_map<std::string, unsigned> run_cnt;
+    }; // class ScopedTimer
 
 public:
     using Clock = std::chrono::high_resolution_clock;
@@ -176,13 +189,13 @@ private:
         }
 
     private:
-        std::string label;
+        std::string label; //!< global unique key
         TimePoint time_start;
         double time_total { 0 };
-        double time_last { 0 }; // time between last start and last stop
+        double time_last { 0 }; //!< time between last start and last stop
         int count_ { 0 }; //!< started times
         volatile bool is_on { false };
-    };
+    }; // class Timer
 
 private:
     inline static std::unordered_map<std::string, Timer> global_timers;
@@ -196,7 +209,7 @@ private:
         auto r = global_timers.emplace(label, label);
         return r.first->second;
     }
-};
+}; // class TicToc
 
 TESTFUNCS_CREATE_WANNING_MSG(TicToc)
 } // namespace dbg
